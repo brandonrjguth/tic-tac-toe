@@ -54,67 +54,62 @@ const game = {
         }
 
         // Check for win conditions
-        console.log("valid row = " + this.evalRow(x, y));
-        console.log("valid column = " + this.evalCol(x, y));
-        console.log("valid diagonal = " + this.evalDiagonal(x, y));
+        console.log("win = " + this.evalWin(x, y));
     },
 
-    // Method to evaluate rows for a win condition
-    evalRow: function (row, column) {
-        for (let i = 0; i < this.grid.length; i++) {
-            let startValue = this.grid[row][column]
-            if (this.grid[row][i] !== startValue) {
-                return false;
-            }
-        }
-        return true
-    },
-
-    // Method to evaluate columns for a win condition
-    evalCol: function (row, column) {
-        for (let i = 0; i < this.grid.length; i++) {
-            let startValue = this.grid[row][column]
-            if (this.grid[i][column] !== startValue) {
-                return false;
-            }
-        }
-        return true
-    },
-
-    // Method to evaluate diagonals for a win condition
-    evalDiagonal: function (row, column) {
-
-        // Check diagonal from top left to bottom right
-        //Start out true, if false, break and continue to check
-        //top right to top left
-        let diagonalComplete = true;
+    // Method to evaluate win conditions
+    // Method to evaluate win conditions
+    evalWin: function (row, column) {
+        // Get the value of the current player's move
         let startValue = this.grid[row][column];
+        // Variable to track if a win condition has been met
+        let win = true;
+
+        // Check row for a win condition
         for (let i = 0; i < this.grid.length; i++) {
-            if (startValue !== this.grid[i][i]) {
-                diagonalComplete = false;
-                break
+            if (this.grid[row][i] !== startValue) {
+                win = false;
+                break;
             }
         }
 
-        //return true if top left to bottom right is all the
-        if (diagonalComplete) {
-            return true
-        }
-
-        // Check diagonal from top right to bottom left
-        //Start out true, if false, break 
-        diagonalComplete = true
-
-        for (let i = 0; i < this.grid.length; i++) {
-            if (startValue !== this.grid[i][this.grid.length - 1 - i]) {
-                diagonalComplete = false;
-                return false
+        // Check column for a win condition if no win in row
+        if (!win) {
+            win = true;
+            for (let i = 0; i < this.grid.length; i++) {
+                if (this.grid[i][column] !== startValue) {
+                    win = false;
+                    break;
+                }
             }
         }
-        if (diagonalComplete) {
-            return true
+
+        // Check diagonal for a win condition if no win in row or column
+        if (!win) {
+            win = true;
+            for (let i = 0; i < this.grid.length; i++) {
+                if (startValue !== this.grid[i][i]) {
+                    win = false;
+                    break;
+                }
+            }
+
+            // Check other diagonal if no win in first diagonal
+            if (!win) {
+                win = true;
+                for (let i = 0; i < this.grid.length; i++) {
+                    if (startValue !== this.grid[i][this.grid.length - 1 - i]) {
+                        win = false;
+                        break;
+                    }
+                }
+            }
         }
+
+        // Return true if a win condition has been met, false otherwise
+        return win;
     }
+
 }
 
 // Initialize the game when the script is loaded
